@@ -1,0 +1,138 @@
+    1  ssh director
+    2  exit
+    3  exit
+    4  source admin-rc 
+    5  openstack network list
+    6  openstack image list
+    7  openstack flavour list
+    8  openstack flavor list
+    9  openstack network list
+   10  openstack image list
+   11  openstack server create --image rhel8 --flavor default --network finance-network1 --wait webserver
+   12  openstack server list
+   13  openstack console url show webserver
+   14  history 
+   15  exit
+   16  ssh root@controller
+   17  ssh root@controller0
+   18  ssh root@director
+   19  ssh root@controller0
+   20  ssh root@director
+   21  ssh root@compute0
+   22  ssh root@compute1
+   23  ssh root@computehci0
+   24  ssh root@ceph0
+   25  ssh root@controller0
+   26  cat developer1-finance-rc 
+   27  source admin-rc 
+   28  openstack server list
+   29  source developer1-finance-rc 
+   30  openstack server list
+   31  cat admin-rc 
+   32  source admin-rc 
+   33  openstack server list --project=finance
+   34  openstack server list --project-domain 
+   35  clear
+   36  openstack server list --project=finance
+   37  exit
+   38  lab intro-launching start
+   39  source developer1-finance-rc 
+   40  openstack flavor list
+   41  openstack image list
+   42  openstack image show rhel8
+   43  openstack help flavor list
+   44  openstack server create --image rhel8 --flavordefault --nic net-id=finance-network1 --wait finance-server1
+   45  openstack server create --image rhel8 --flavor default --nic  net-id=finance-network1 --wait finance-server1
+   46  openstack server list -f json
+   47  openstack console log show 
+   48  openstack console log show finance-server1
+   49  openstack console url show finance-server1
+   50  firefox http://172.25.250.50:6080/vnc_auto.html?path=%3Ftoken%3Dae15c1e1-0aa8-41b9-8fc7-27e142b2ca87
+   51  openstack server delete 89f48040-970c-434f-bb0f-6fc5abd6b2fb
+   52  openstack server list -f json
+   53  openstack server delete a774ef8e-d886-4795-b43b-aee6f3fc46d9
+   54  openstack server list
+   55  lab intro-launching finish
+   56  exit
+   57  lab intro-launching finish
+   58  clear
+   59  ssh root@controller0
+   60  ssh root@director
+   61  ssh director
+   62  ssh root@controller0
+   63  source admin-rc 
+   64  openstack domain create devops
+   65  openstack domain list
+   66  openstack domain show devops
+   67  openstack domain delete devops
+   68  openstack domain disable devops
+   69  openstack domain set devops disable
+   70  openstack domain set devops --disable
+   71  openstack domain delete devops
+   72  history 
+   73  lab intro-services start
+   74  ssh heat-admin@controller0
+   75  lab intro-services finish
+   76  lab intro-review start
+   77   ssh heat-admin@controller0
+   78  ssh heat-admin@compute0
+   79  source ~/operator1-production-rc
+   80  openstack server list --column Name --column ID
+   81  openstack server list
+   82  openstack server show production-server2 --max-width 80
+   83  ssh heat-admin@compute1
+   84  lab intro-review grade
+   85   lab intro-review finish
+   86  source admin-rc 
+   87  openstack domain list
+   88  openstack domain create devops
+   89  openstack domain list
+   90  openstack user create --domain devops --email robert@lab.example.com --password redhat robert
+   91  openstack project create --domain devops developer 
+   92  openstack user create --project developer --project-domain devops --email william@lab.example.com --password redhat william
+   93  openstack role add --project developer --project-domain devops --user william --user-domain devops member
+   94  openstack role add --project developer --project-domain devops --user robert --user-domain devops admin
+   95  openstack role assignment list --project developer
+   96  openstack role assignment list --doma
+   97  openstack role assignment list --project developer --names 
+   98  openstack role assignment list --project developer --names --effective 
+   99  openstack role add --project developer --project-domain devops --user william  member
+  100  openstack role assignment list --project developer --names --effective 
+  101  cp developer1-finance-rc robert-developer-rc
+  102  vim robert-developer-rc 
+  103  source robert-developer-rc 
+  104  openstack image list
+  105  openstack flavor list
+  106  openstack network list
+  107  openstack quota show --default 
+  108  openstack quota set instance=20 --class developer
+  109  openstack quota set instance=20 --class default
+  110  openstack quota set --instances=20 --class default
+  111  openstack quota show --default | grep instances
+  112  openstack quota set --ram=10000 developer
+  113  openstack quota show developer | grep ram
+  114  openstack network list
+  115  source admin-rc 
+  116  openstack network list
+  117  openstack network show finance-network1
+  118  openstack network show provider-datacentre
+  119  source robert-developer-rc 
+  120  openstack network create developer-network1
+  121  openstack network show 
+  122  openstack network show developer-network1
+  123  openstack subnet list
+  124  openstack subnet create --subnet-range 192.168.9.0/24 --network developer-network1 --allocation-pool start=192.168.9.100 , end=192.168.9.150 developer-subnet1
+  125  openstack subnet create --subnet-range 192.168.9.0/24 --network developer-network1 --allocation-pool start=192.168.9.100,end=192.168.9.150 developer-subnet1
+  126  openstack subnet list
+  127  openstack server create --flavor=default --image=rhel8 --network developer-network1 --wait developer-server1
+  128  wget http://classroom.example.com/materials/osp-small.qcow2
+  129  ll
+  130  openstack image list
+  131  openstack image create --disk-format qcow2 --file osp-small.qcow2 --public dev-image1
+  132  openstack image list
+  133  openstack flavor create --ram 2048 --vcpus 2 --disk 10 dev-flavor
+  134  openstack flavor list
+  135  history 
+  136  git clone https://github.com/ssureshmuga/Openstack110
+  137  ll
+  138  history >> Openstack110/history11092023.txt
