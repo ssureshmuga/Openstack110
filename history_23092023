@@ -1,0 +1,136 @@
+    1  ssh director
+    2  exit
+    3  exit
+    4  ssh root@controller0
+    5  ls
+    6  cp developer1-finance-rc operator1-finance-rc
+    7  vim operator1-finance-rc 
+    8  source operator1-finance-rc 
+    9  openstack flavor create --disk 10 --ephemeral 2 --ram 2048 --vcpus 2 ephemeral-flavor
+   10  source developer1-finance-rc 
+   11  openstack server create --image rhel8 --flavor ephemeral-flavor --network finance-network1 --wait ephemeral-server1
+   12  openstack console url show ephemeral-server1
+   13  source operator1-finance-rc 
+   14  source developer1-finance-rc 
+   15  openstack volume create --size 10 --image rhel8 persistent
+   16  openstack volume list
+   17  openstack server create --flavor default --volume persistent --network finance-network1 --wait persistent-server1
+   18  openstack volume list
+   19  openstack volume create --size 2 addional-disk
+   20  openstack volume list
+   21  openstack server add volume persistent-server1 additional-disk
+   22  openstack server add volume persistent-server1 addional-disk
+   23  openstack volume list
+   24  openstack console url show persistent-server1
+   25  openstack volume snapshot create --volume persistent snap-volume
+   26  openstack volume list
+   27  openstack volume snapshot create --volume persistent-server1 snap-volume
+   28  openstack volume snapshot create --volume persistent snap-volume
+   29  openstack volume snapshot create --volume addional-disk snap-volume
+   30  openstack volume delete persistent-server1 addional-disk
+   31  openstack volume list
+   32  openstack volume delete addional-disk persistent-server1
+   33  openstack volume delete persistent-server1 addional-disk 
+   34  openstack volume unset persistent-server1 addional-disk
+   35  openstack server remove volume persistent-server1 addional-disk
+   36  openstack volume list 
+   37  openstack volume snapshot create --volume addional-disk snap-volume
+   38  openstack server create --flavor default --image rhel8 --boot-from-volume 10 --network finance-network1 --wait server2
+   39  openstack volume list
+   40  openstack console url show server2
+   41  openstack server image create --name bkp-server2 --wait server2
+   42  openstack image list
+   43  openstack server create --flavor default --image bkp-server2 --network finance-network1 --wait server3
+   44  openstack console url show server3
+   45  source developer1-finance-rc 
+   46  openstack container create suresh
+   47  ls
+   48  openstack object create suresh admin-rc --name rcdid
+   49  swift post suresh \rcdid -h 'X-Delete-After:60'
+   50  swift post suresh \rcdid -H 'X-Delete-After:60'
+   51  swift show suresh \rcdid 
+   52  swift state suresh \rcdid 
+   53  swift stat suresh \rcdid 
+   54  date -d@1695269721
+   55  date
+   56  swift stat suresh \rcdid 
+   57  openstack router create ex110
+   58  openstack router add subnet finance-network1 ex110
+   59  openstack router add subnet finance-subnet1 ex110
+   60  openstack subnet list
+   61  openstack router add subnet ex110 finance-subnet1
+   62  openstack router set --external-gateway provider-datacentre ex110
+   63  openstack keypair create webkey > webkey.pem
+   64  chmod 600 webkey.pem 
+   65  openstack server create --flavor default --image rhel8 --network finance-network1 --key-name webkey --wait server5
+   66  openstack server list 
+   67  openstack floating ip create provider-datacentre 
+   68  openstack floating ip list 
+   69  openstack server add floating ip server5 172.25.250.126
+   70  openstack floating ip list 
+   71  ssh -i webkey.pem cloud-user@172.25.250.126
+   72  openstack security group create ssh 
+   73  openstack security group rule create --protocol=icmp ssh
+   74  openstack security group rule create --protocol=tcp --dst-port 22 ssh
+   75  openstack security group create web
+   76  openstack security group rule create --protocol=tcp --dst-port 80 web
+   77  ssh -i webkey.pem cloud-user@172.25.250.126
+   78  openstack server add security group server5 ssh
+   79  openstack server add security group server5 web
+   80  curl 172.25.250.126:80
+   81  ssh -i webkey.pem cloud-user@172.25.250.126
+   82  curl 172.25.250.126:80
+   83  source operator1-finance-rc 
+   84  manila type-create cephfstype false 
+   85  source developer1-finance-rc 
+   86  manila create --name share --share-type cephfstype cephfs 2
+   87  openstack server create --flavor default --image rhel8 --network finance-network1 --network provider-storage --key-name webkey --security-group ssh --security-group web --wait storage-server
+   88  scp root@controller0:/root/cloud-user.keyring .
+   89  scp root@controller0:/etc/ceph/ceph.conf .
+   90  ll
+   91  openstack floating ip create provider-datacentre
+   92  openstack server add floating ip storage-server 172.25.250.155
+   93  scp -i webkey.pem cloud-user.keyring ceph.conf cloud-user@172.25.250.155:
+   94  ssh -i webkey.pem cloud-user@172.25.250.155
+   95  wget http://materials.example.com/ceph.repo
+   96  l
+   97  ll
+   98  scp -i webkey.pem ceph.repo cloud-user@172.25.250.155
+   99  scp -i webkey.pem ceph.repo cloud-user@172.25.250.155:
+  100  ssh -i webkey.pem cloud-user@172.25.250.155
+  101  manila access-allow share cephx cloud-user 
+  102  manila share-export-location-list show share
+  103  manila share-export-location-list share
+  104  ssh -i webkey.pem cloud-user@172.25.250.155
+  105  ssh root@controller0
+  106  vim web.sh
+  107  chmod +x web.sh 
+  108  ll
+  109  source developer1-finance-rc 
+  110  openstack server create --flavor default --image rhel8 --network finance-network1 --user-data web.sh --key-name webkey --security-group ssh --security-group web --wait cloud-server
+  111  openstack floating ip create provider-datacentre 
+  112  openstack server add floating ip cloud-server 172.25.250.185 
+  113  curl http://172.25.250.185
+  114  ssh -i webkey.pem cloud-user@172.25.250.185
+  115  cat web.sh 
+  116  openstack server list
+  117  openstack server delete ephemeral-server1
+  118  openstack server delete persistent-server1
+  119  openstack server delete server2
+  120  openstack server delete server3
+  121  openstack server delete server5
+  122  openstack server delete cloud-server
+  123  vi web.sh 
+  124  history 
+  125  openstack server create --flavor default --image rhel8 --network finance-network1 --user-data web.sh --key-name webkey --security-group ssh --security-group web --wait cloud-server
+  126  openstack floating ip list
+  127  openstack server add floating ip cloud-server 172.25.250.185 
+  128  curl http://172.25.250.185
+  129  openstack server list
+  130  openstack floating ip list
+  131  cat web.sh 
+  132  ssh -i webkey.pem cloud-user@172.25.250.185
+  133  curl http://172.25.250.185
+  134  ll
+  135  git clone https://github.com/ssureshmuga/Openstack110
+  136  history > Openstack110/history_23092023
