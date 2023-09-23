@@ -134,3 +134,7 @@
   134  ll
   135  git clone https://github.com/ssureshmuga/Openstack110
   136  history > Openstack110/history_23092023
+
+
+4  podman exec ceph-mon-controller0 ceph --name=client.manila --keyring=/etc/ceph/ceph.client.manila.keyring auth get-or-create client.cloud-user > /root/cloud-user.keyring
+    5  cat /root/cloud-user.keyring 
